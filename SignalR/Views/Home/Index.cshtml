@@ -17,7 +17,7 @@
 
     <div id="editor-editing" style="display:none;">
         <h1>Editing JSON file: <span id="current-file"></span></h1>
-        <textarea id="json-editor" rows="10" cols="50"></textarea>
+        <div id="json-editor"></div>
         <br/>
         <button id="reset-button" class="btn btn-primary">Reset</button>
         <button id="download-button" class="btn btn-success">Download File</button>
@@ -29,6 +29,10 @@
 </div>
 
 @section Scripts{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/addon/edit/matchbrackets.min.js"></script>
     <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/editor.js"></script>
 }

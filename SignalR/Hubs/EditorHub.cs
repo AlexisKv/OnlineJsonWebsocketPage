@@ -50,12 +50,12 @@ namespace SignalR.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var roomNameAndCollaboratorName = _manager.LeaveRooms(Context.ConnectionId);
-
+        
             foreach (var room in roomNameAndCollaboratorName)
             {
                 await Clients.Group(room.Key).SendAsync("CollaboratorsUpdated", room.Value.Collaborators.Values);        
             }
-
+        
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -63,20 +63,8 @@ namespace SignalR.Hubs
         {
             var room = _manager.GetRoom(fileName);
 
-            // Read the content of the file on the server
-            string fileContent = await ReadFileContentAsync(fileName);
-
-            if (!string.IsNullOrEmpty(content))
-            {
                 room.UpdateContent(content);
-            }
-            else
-            {
-                room.UpdateContent(fileContent);
-            }
-            // Update the file content in the room
-
-            // Broadcast the changes to all collaborators, including the current content
+   
             await Clients.Group(room.Name).SendAsync("FileUpdated", room.GetContent());
         }
 
