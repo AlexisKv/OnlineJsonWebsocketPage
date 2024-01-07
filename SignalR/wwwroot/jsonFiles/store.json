@@ -1,0 +1,18 @@
+﻿{
+  "name": "SuperMart",
+  "location": "City Center",
+  "departments": [
+    {
+      "name": "Groceries",
+      "categories": ["Fruits", "Vegetables", "Cereals"]
+    },
+    {
+      "name": "Electronics",
+      "categories": ["TVs", "Laptops", "Smartphones"]
+    },
+    {
+      "name": "Clothing",
+      "categories": ["Men's", "Women's", "Kids"]
+    }
+  ]
+}

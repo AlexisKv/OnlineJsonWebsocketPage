@@ -1,0 +1,34 @@
+﻿<!-- Index.cshtml -->
+@{
+    ViewData["Title"] = "Editor Page";
+}
+
+<div class="text-center">
+    <div id="editor-welcome">
+        <h1>Welcome</h1>
+        <p>Enter your name:</p>
+        <input id="name-input" type="text"/>
+        <p>Select a JSON file to edit:</p>
+        <select id="file-list">
+        </select>
+        <button id="enter-button" class="btn btn-primary">Enter</button>
+        <div id="name-error" style="color: red; display: none;">Please enter your name.</div>
+    </div>
+
+    <div id="editor-editing" style="display:none;">
+        <h1>Editing JSON file: <span id="current-file"></span></h1>
+        <textarea id="json-editor" rows="10" cols="50"></textarea>
+        <br/>
+        <button id="reset-button" class="btn btn-primary">Reset</button>
+        <button id="download-button" class="btn btn-success">Download File</button>
+        <button id="exit-button" class="btn btn-danger" onClick="location.reload();">Exit</button>
+        <p>Collaborators: <span id="collaborators"></span></p>
+    </div>
+
+    <div id="editor-error"></div>
+</div>
+
+@section Scripts{
+    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/editor.js"></script>
+}
