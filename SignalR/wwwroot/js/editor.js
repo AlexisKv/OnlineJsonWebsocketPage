@@ -1,6 +1,6 @@
 ﻿// editor.js
 (function () {
-    let connection = new signalR.HubConnectionBuilder().withUrl("/editorHub").build();
+   let connection = new signalR.HubConnectionBuilder().withUrl("/editorHub").build();
     let currentFileName = "";
     let contentBox = "";
     let collaboratorName = "";
@@ -36,11 +36,40 @@
             connection.invoke("JoinFileRoom", fileName, collaboratorName);
 
             lastSentContent = ''; // reset lastSentContent
-            connection.invoke("GetCurrentFile", currentFileName);
 
             switchToEditingView();// simulate a click on the enter button
         }
     });
+
+    function animateCollaboratorEntry(collabElem) {
+        // Use GSAP to animate
+        gsap.from(collabElem, { duration: 1, x: "+=150", autoAlpha: 0 });
+    }
+
+
+    connection.on("UserJoined", (newUserName) => {
+        handleUserJoinedNotification(newUserName);
+    });
+
+    function handleUserJoinedNotification(newUserName) {
+
+        // Get the #collaborators element
+        let collabsDiv = document.querySelector("#collaborators");
+
+        // Create a new collaborator element
+        let collabElem = document.createElement('span');
+        collabElem.id = newUserName.replace(/ /g, "_").replace(/,/g, "");  // Assign the id
+        collabElem.innerText = newUserName;
+
+        // Append the new collaborator
+        collabsDiv.appendChild(collabElem);
+
+        // Animate the new collaborator entry
+        animateCollaboratorEntry(collabElem);
+    }
+
+
+
 
     connection.start().then(() => {
         populateFileList();
@@ -82,14 +111,76 @@
         }
         changeSource = null;
     });
+    
+    connection.on("LeavingRoomNotify", nameWhoLeaving => {
+        handleLeavingRoomNotification(nameWhoLeaving);
+    });
+
+    function handleLeavingRoomNotification(nameWhoLeaving) {
+     
+        changeSource = null;
+
+        // Find collaborator span by name
+        let leavingCollabElem = document.querySelector("#" + nameWhoLeaving.replace(/ /g, "_").replace(/,/g, ""));
+
+        if (leavingCollabElem) {
+            // Animate the name disappearing
+            animateLeavingCollaborator(leavingCollabElem);
+        }
+    }
+
+    function animateLeavingCollaborator(leavingCollabElem) {
+        gsap.to(leavingCollabElem, {
+            duration: 1,
+            x: "+=150",
+            autoAlpha: 0,
+            onComplete: () => {
+                const parentElement = leavingCollabElem.parentElement;
+
+                // Remove the element from DOM after animation
+                leavingCollabElem.remove();
+
+                // Update the collaborators string without trailing commas
+                const collaboratorsSpans = Array.from(parentElement.getElementsByTagName("span"));
+                const newCollaboratorsString = collaboratorsSpans
+                    .map(span => span.innerText)
+                    .join(", ");
+
+                // Update the collaborators string in the parent element
+                parentElement.innerText = newCollaboratorsString;
+            }
+        });
+    }
+
 
     connection.on("CollaboratorsUpdated", collaborators => {
-        const collaboratorNames = Object.values(collaborators).map(name =>
+        const newCollaboratorNames = Object.values(collaborators).map(name =>
             name === collaboratorName ? `${name} (You)` : name
         );
-        $("#collaborators").text(collaboratorNames.join(', '));
+
+        // Get the #collaborators element
+        let collabsDiv = document.querySelector("#collaborators");
+
+        // First, clear all existing entries
+        collabsDiv.innerHTML = "";
+
+        // Now append new collaborators
+        newCollaboratorNames.forEach((name, i, arr) => {
+            let collabElem = document.createElement('span');
+            collabElem.id = name.replace(/ /g, "_").replace(/,/g, "");  // Assign the id
+
+            // Adding comma after each collaborator (except the last one)
+            collabElem.innerText = name + (i < arr.length - 1 ? ", " : "");
+
+            // Use GSAP to animate
+            animateCollaboratorEntry(collabElem);
+
+            collabsDiv.appendChild(collabElem);
+        });
     });
-    
+
+
+
     $("#download-button").click(() => connection.invoke("DownloadFile", currentFileName));
 
     $("#exit-button").click(() => {

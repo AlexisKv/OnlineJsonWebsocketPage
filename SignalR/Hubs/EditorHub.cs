@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.SignalR;
 using SignalR.Manager;
 
 namespace SignalR.Hubs
@@ -18,6 +14,8 @@ namespace SignalR.Hubs
 
             await Groups.AddToGroupAsync(Context.ConnectionId, room.Name);
 
+            // Notify all collaborators about the new user
+            await Clients.Group(room.Name).SendAsync("UserJoined", collaboratorName);
             // Notify clients about the current collaborators
             await Clients.Group(room.Name).SendAsync("CollaboratorsUpdated", room.Collaborators);
 
@@ -27,7 +25,7 @@ namespace SignalR.Hubs
         public async Task GetUnchangedFile(string fileName)
         {
             var room = _manager.GetRoom(fileName);
-    
+
             if (room.Collaborators.Count == 1)
             {
                 string fileContent = await ReadFileContentAsync(fileName);
@@ -36,7 +34,7 @@ namespace SignalR.Hubs
 
             await Clients.Caller.SendAsync("FileUpdated", room.GetContent());
         }
-        
+
         public async Task ResetFile(string fileName)
         {
             var room = _manager.GetRoom(fileName);
@@ -46,16 +44,19 @@ namespace SignalR.Hubs
 
             await Clients.Group(room.Name).SendAsync("FileUpdated", room.GetContent());
         }
-        
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+
+            var nameWhoLeaving = _manager.GetNameWhoLeaves(Context.ConnectionId);
             var roomNameAndCollaboratorName = _manager.LeaveRooms(Context.ConnectionId);
-        
+            
             foreach (var room in roomNameAndCollaboratorName)
             {
-                await Clients.Group(room.Key).SendAsync("CollaboratorsUpdated", room.Value.Collaborators.Values);        
+                // await Clients.Group(room.Key).SendAsync("CollaboratorsUpdated", room.Value.Collaborators.Values);
+                await Clients.Group(room.Key).SendAsync("LeavingRoomNotify", nameWhoLeaving.Value);
             }
-        
+
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -63,8 +64,8 @@ namespace SignalR.Hubs
         {
             var room = _manager.GetRoom(fileName);
 
-                room.UpdateContent(content);
-   
+            room.UpdateContent(content);
+
             await Clients.Group(room.Name).SendAsync("FileUpdated", room.GetContent());
         }
 
@@ -105,7 +106,7 @@ namespace SignalR.Hubs
             // Send the current collaborators to the client
             await Clients.Caller.SendAsync("CollaboratorsUpdated", room.Collaborators.Values);
         }
-        
+
         public Task<List<string>> GetFileList()
         {
             var fileList = _manager.GetFileList();

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 
 namespace SignalR.Manager
 {
@@ -20,12 +16,14 @@ namespace SignalR.Manager
 
             if (string.IsNullOrWhiteSpace(collaboratorId))
             {
-                throw new ArgumentNullException(nameof(collaboratorId), "Collaborator Id cannot be null or whitespace.");
+                throw new ArgumentNullException(nameof(collaboratorId),
+                    "Collaborator Id cannot be null or whitespace.");
             }
 
             if (string.IsNullOrWhiteSpace(collaboratorName))
             {
-                throw new ArgumentNullException(nameof(collaboratorName), "Collaborator name cannot be null or whitespace.");
+                throw new ArgumentNullException(nameof(collaboratorName),
+                    "Collaborator name cannot be null or whitespace.");
             }
 
             var room = _editorRooms.GetOrAdd(fileName, new EditorRoom(fileName));
@@ -34,11 +32,11 @@ namespace SignalR.Manager
 
             return room;
         }
-        
+
         public List<KeyValuePair<string, EditorRoom>> LeaveRooms(string collaboratorId)
         {
             var roomNameAndCollaboratorName = new List<KeyValuePair<string, EditorRoom>>();
-    
+
             foreach (var room in _editorRooms)
             {
                 if (room.Value.Collaborators.ContainsKey(collaboratorId))
@@ -49,6 +47,19 @@ namespace SignalR.Manager
             }
 
             return roomNameAndCollaboratorName;
+        }
+
+        public KeyValuePair<string, string> GetNameWhoLeaves(string collaboratorId)
+        {
+            KeyValuePair<string,string> collaborator = default;
+            
+            foreach (var room in _editorRooms)
+            {
+                collaborator = room.Value.Collaborators.FirstOrDefault(x => x.Key == collaboratorId);
+                return new KeyValuePair<string, string>(collaborator.Key, collaborator.Value);
+            }
+
+            return collaborator;
         }
 
         public EditorRoom GetRoom(string fileName)
@@ -64,7 +75,7 @@ namespace SignalR.Manager
 
         public List<string?> GetFileList()
         {
-            string directoryPath = "wwwroot/jsonFiles";  // Spell out the correct path
+            string directoryPath = "wwwroot/jsonFiles"; // Spell out the correct path
             List<string?> fileList = Directory.GetFiles(directoryPath, "*.json")
                 .Select(Path.GetFileName)
                 .ToList();
@@ -98,17 +109,20 @@ namespace SignalR.Manager
         {
             return _content;
         }
+        
 
         public void Join(string collaboratorId, string collaboratorName)
         {
             if (string.IsNullOrWhiteSpace(collaboratorId))
             {
-                throw new ArgumentNullException(nameof(collaboratorId), "Collaborator Id cannot be null or whitespace.");
+                throw new ArgumentNullException(nameof(collaboratorId),
+                    "Collaborator Id cannot be null or whitespace.");
             }
 
             if (string.IsNullOrWhiteSpace(collaboratorName))
             {
-                throw new ArgumentNullException(nameof(collaboratorName), "Collaborator name cannot be null or whitespace.");
+                throw new ArgumentNullException(nameof(collaboratorName),
+                    "Collaborator name cannot be null or whitespace.");
             }
 
             Collaborators.TryAdd(collaboratorId, collaboratorName);
