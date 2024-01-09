@@ -106,9 +106,11 @@ public class EditorHub : Hub
         await Clients.Caller.SendAsync("CollaboratorsUpdated", room.Collaborators.Values);
     }
 
-    public Task<List<string>> GetFileList()
+    public Task<List<string?>> GetFileList()
     {
         var fileList = _manager.GetFileList();
         return Task.FromResult(fileList);
     }
+    
+    
 }

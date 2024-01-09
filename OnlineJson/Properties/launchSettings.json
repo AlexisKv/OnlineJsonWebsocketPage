@@ -8,11 +8,11 @@
     }
   },
   "profiles": {
-    "SignalR": {
+    "OnlineJson": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7234;http://localhost:5234",
+      "applicationUrl": "https://localhost:7234",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

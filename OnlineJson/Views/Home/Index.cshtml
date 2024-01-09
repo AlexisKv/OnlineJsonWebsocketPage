@@ -4,20 +4,19 @@
 }
 
 <div class="text-center all-content">
-    <div id="editor-welcome" class="editor-welcome">
+    <div id="editor-welcome">
         <p>Enter your name:</p>
-        <input id="name-input" class="name-input" type="text"/>
+        <input id="name-input" type="text"/>
         <br/>
         <p>Select a JSON file to edit:</p>
-        <select id="file-list">
-        </select>
+        <select id="file-list"></select>
         <br/>
         <button id="enter-button" class="btn btn-primary">Enter</button>
         <div id="name-error" style="color: red; display: none;">Please enter your name.</div>
     </div>
-    <div id="editor-editing" class="editor-editing" style="display:none;">
+    <div id="editor-editing" style="display:none;">
         <h1>Editing JSON file: <span id="current-file"></span></h1>
-        <div id="json-editor" class="json-editor"></div>
+        <pre id="json-editor"></pre>
         <br/>
         <div class="editor-buttons">
             <button id="reset-button" class="btn btn-primary">Reset</button>
@@ -26,7 +25,6 @@
         </div>
         <p class="collaborators">Collaborators: <span id="collaborators"></span></p>
     </div>
-
     <div id="editor-error"></div>
 </div>
 
