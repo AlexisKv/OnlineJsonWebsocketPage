@@ -3,25 +3,29 @@
     ViewData["Title"] = "Editor Page";
 }
 
-<div class="text-center">
-    <div id="editor-welcome">
+<div class="text-center all-content">
+    <div id="editor-welcome" class="editor-welcome">
         <p>Enter your name:</p>
-        <input id="name-input" type="text"/>
+        <input id="name-input" class="name-input" type="text"/>
+        <br/>
         <p>Select a JSON file to edit:</p>
         <select id="file-list">
         </select>
+        <br/>
         <button id="enter-button" class="btn btn-primary">Enter</button>
         <div id="name-error" style="color: red; display: none;">Please enter your name.</div>
     </div>
 
-    <div id="editor-editing" style="display:none;">
+    <div id="editor-editing" class="editor-editing" style="display:none;">
         <h1>Editing JSON file: <span id="current-file"></span></h1>
-        <div id="json-editor"></div>
+        <div id="json-editor" class="json-editor"></div>
         <br/>
-        <button id="reset-button" class="btn btn-primary">Reset</button>
-        <button id="download-button" class="btn btn-success">Download File</button>
-        <button id="exit-button" class="btn btn-danger" onClick="location.reload();">Exit</button>
-        <p>Collaborators: <span id="collaborators"></span></p>
+        <div class="editor-buttons">
+            <button id="reset-button" class="btn btn-primary">Reset</button>
+            <button id="download-button" class="btn btn-success">Download File</button>
+            <button id="exit-button" class="btn btn-danger" onClick="location.reload();">Exit</button>
+        </div>
+        <p class="collaborators">Collaborators: <span id="collaborators"></span></p>
     </div>
 
     <div id="editor-error"></div>
@@ -32,7 +36,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/editor.js"></script>
+    
 }
