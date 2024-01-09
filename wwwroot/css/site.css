@@ -2,12 +2,12 @@
 
 html {
     font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+body {
+    margin-bottom: 60px;
 }
 
 .all-content {
@@ -23,7 +23,7 @@ html {
 }
 
 .all-content p {
-    margin: 15px 0px;
+    margin: 15px 0;
     font-size: 18px;
     font-weight: bold;
 }
@@ -54,28 +54,18 @@ html {
     min-height: 33px;
 }
 
-.name-input {
+#name-input {
     min-height: 33px;
     width: 100%;
 }
 
-.editor-editing {
+#editor-editing {
     width: 100%;
 }
 
-.json-editor {
+#json-editor {
     width: 100%;
 }
-
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-body {
-    margin-bottom: 60px;
-}
-
 
 #rps-welcome input {
     margin: 4px;
@@ -83,4 +73,10 @@ body {
 
 .rps-highlight {
     background-color: antiquewhite;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
