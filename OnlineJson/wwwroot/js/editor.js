@@ -208,9 +208,6 @@
         });
     }
 
-
-
-
     function downloadFile(fileName, content) {
         const blob = new Blob([content], {type: 'application/json'});
         const link = document.createElement('a');
