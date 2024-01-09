@@ -195,16 +195,21 @@
 
     connection.on("DownloadFile", (fileName, content) => downloadFile(fileName, content));
 
-    function switchToWelcomeView() {
-        $("#editor-welcome").show();
-        $("#editor-editing").hide();
+    function switchToEditingView() {
+        // Slide up the welcome view after a delay
+        setTimeout(function () {
+            $("#editor-welcome").slideUp(1000);
+        }, 500);
+
+        // Fade in the editing view and initialize JSON editor after the animation completes
+        $("#editor-editing").fadeIn(2000, function () {
+            // Your existing logic for invoking SignalR
+            connection.invoke("GetCollaborators", currentFileName);
+        });
     }
 
-    function switchToEditingView() {
-        $("#editor-welcome").hide();
-        $("#editor-editing").show();
-        connection.invoke("GetCollaborators", currentFileName);
-    }
+
+
 
     function downloadFile(fileName, content) {
         const blob = new Blob([content], {type: 'application/json'});
