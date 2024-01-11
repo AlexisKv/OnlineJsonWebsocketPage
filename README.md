@@ -16,7 +16,7 @@ This web app, powered by the .NET SignalR library, allows users to collaborate o
 
 - **Collaborator Tracking**: See who else is currently editing the file.
 
-## Verification
+## Demo
 
-To verify real-time collaboration, open two browser windows side-by-side, select the same JSON file in both, and observe changes made in one window being instantly reflected in the other.
+![Demo](https://github.com/AlexisKv/OnlineJsonWebsocketPage/raw/main/OnlineJsonEditor.gif)
 
