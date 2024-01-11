@@ -98,7 +98,7 @@
         // Now append new collaborators
         newCollaboratorNames.forEach((name, i, arr) => {
             let collabElem = document.createElement('span');
-            collabElem.id = name.replace(/ /g, "_").replace(/,/g, "");  // Assign the id
+            collabElem.id = name.replace(/ /g, "_").replace(/,/g, "");
 
             collabElem.innerText = name + (i < arr.length - 1 ? ", " : "");
 
@@ -138,11 +138,12 @@ function handleUserJoinedNotification(newUserName) {
 
     let collabsDiv = document.querySelector("#collaborators");
     let collabElem = document.createElement('span');
+    
     collabElem.id = newUserName.replace(/ /g, "_").replace(/,/g, "");
     collabElem.innerText = newUserName;
-    
+
     collabsDiv.appendChild(collabElem);
-    
+
     animateCollaboratorEntry(collabElem);
 }
 
@@ -159,40 +160,42 @@ function switchToEditingView(connection) {
     setTimeout(function () {
         $("#editor-welcome").slideUp(1000);
     }, 500);
-
-    // Fade in the editing view and initialize JSON editor after the animation completes
+    
     $("#editor-editing").fadeIn(2000, function () {
         connection.invoke("GetCollaborators", currentFileName);
     });
 }
 
 function animateLeavingCollaborator(leavingCollabElem) {
-    gsap.to(leavingCollabElem, {
-        duration: 1,
-        x: "+=150",
-        autoAlpha: 0,
-        onComplete: () => {
-            const parentElement = leavingCollabElem.parentElement;
-            
-            leavingCollabElem.remove();
+    try {
+        gsap.to(leavingCollabElem, {
+            duration: 1,
+            x: "+=150",
+            autoAlpha: 0,
+            onComplete: () => {
+                const parentElement = leavingCollabElem.parentElement;
 
-            const collaboratorsSpans = Array.from(parentElement.getElementsByTagName("span"));
-            const newCollaboratorsString = collaboratorsSpans
-                .map(span => span.innerText)
-                .join(", ");
+                leavingCollabElem.remove();
 
-            // Update the collaborators string in the parent element
-            parentElement.innerText = newCollaboratorsString;
-        }
-    });
+                const collaboratorsSpans = Array.from(parentElement.getElementsByTagName("span"));
+                const newCollaboratorsString = collaboratorsSpans
+                    .map(span => span.innerText)
+                    .join(", ");
+
+                // Update the collaborators string in the parent element
+                parentElement.innerText = newCollaboratorsString;
+            }
+        });
+    } catch (error) {
+        console.error("Error in animateLeavingCollaborator:", error);
+    }
+
 }
 
 function handleLeavingRoomNotification(nameWhoLeaving) {
-    // Find collaborator span by name
     let leavingCollabElem = document.querySelector("#" + nameWhoLeaving.replace(/ /g, "_").replace(/,/g, ""));
-
+    
     if (leavingCollabElem) {
-        // Animate the name disappearing
         animateLeavingCollaborator(leavingCollabElem);
     }
 }
